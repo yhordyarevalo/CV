@@ -1,0 +1,94 @@
+<div #host class="host" aria-hidden="true"></div>
+
+@if (!webglOk()) {
+  <div class="fallback">
+    <p>{{ ui().webglFail }}</p>
+    <a routerLink="/cv">{{ ui().classic }}</a>
+  </div>
+} @else {
+  @if (panelOpen()) {
+    <article class="panel" aria-live="polite">
+      <button
+        type="button"
+        class="close"
+        (click)="panelOpen.set(false)"
+        [attr.aria-label]="sceneText().closePanel"
+        [title]="sceneText().closePanel"
+      >
+        ×
+      </button>
+
+      <p class="kicker">{{ room().kicker }}</p>
+      <h2 class="title">{{ room().title }}</h2>
+
+      @for (p of room().paragraphs ?? []; track $index) {
+        <p class="text">{{ p }}</p>
+      }
+
+      @if (room().chips; as chips) {
+        <ul class="chips">
+          @for (chip of chips; track $index) {
+            <li>{{ chip }}</li>
+          }
+        </ul>
+      }
+
+      @if (room().items; as items) {
+        <ul class="items">
+          @for (item of items; track $index) {
+            <li class="item">
+              <div class="item-head">
+                @if (item.href) {
+                  <a [href]="item.href" target="_blank" rel="noopener noreferrer">{{ item.title }}</a>
+                } @else {
+                  <strong>{{ item.title }}</strong>
+                }
+                @if (item.tag) {
+                  <span class="tag">{{ item.tag }}</span>
+                }
+              </div>
+              @if (item.meta) {
+                <p class="meta">{{ item.meta }}</p>
+              }
+              @if (item.bullets) {
+                <ul class="bullets">
+                  @for (b of item.bullets; track $index) {
+                    <li>{{ b }}</li>
+                  }
+                </ul>
+              }
+            </li>
+          }
+        </ul>
+      }
+    </article>
+  } @else {
+    <button type="button" class="reopen" (click)="panelOpen.set(true)">
+      {{ sceneText().openPanel }}
+    </button>
+  }
+
+  <p class="hint" [class.hide]="!hintVisible()">{{ sceneText().hint }}</p>
+
+  @if (tip(); as t) {
+    <span class="tip" [style.left.px]="t.x + 14" [style.top.px]="t.y + 16">{{ t.text }}</span>
+  }
+
+  @if (toast(); as message) {
+    <p class="toast" role="status">{{ message }}</p>
+  }
+
+  <nav class="rooms" [attr.aria-label]="ui().roomsNav">
+    @for (r of rooms(); track r.id; let i = $index) {
+      <button
+        type="button"
+        [class.active]="i === current()"
+        [attr.aria-current]="i === current() ? 'step' : null"
+        (click)="go(i)"
+      >
+        <span class="num">{{ i + 1 }}</span>
+        <span class="label">{{ r.nav }}</span>
+      </button>
+    }
+  </nav>
+}

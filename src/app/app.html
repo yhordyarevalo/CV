@@ -1,0 +1,17 @@
+<header class="bar">
+  <a class="brand" routerLink="/">{{ ui().brand }}</a>
+
+  <nav class="links">
+    <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">{{ ui().world }}</a>
+    <a routerLink="/cv" routerLinkActive="active">{{ ui().classic }}</a>
+  </nav>
+
+  <div class="lang" role="group" [attr.aria-label]="ui().langLabel">
+    <button type="button" [class.on]="i18n.lang() === 'es'" [attr.aria-pressed]="i18n.lang() === 'es'" (click)="i18n.set('es')">ES</button>
+    <button type="button" [class.on]="i18n.lang() === 'en'" [attr.aria-pressed]="i18n.lang() === 'en'" (click)="i18n.set('en')">EN</button>
+  </div>
+</header>
+
+<main class="main">
+  <router-outlet />
+</main>

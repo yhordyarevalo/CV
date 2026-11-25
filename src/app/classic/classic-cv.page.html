@@ -1,0 +1,63 @@
+<article class="cv">
+  <header class="head">
+    <h1>{{ intro().title }}</h1>
+    <p class="role">{{ intro().kicker }}</p>
+    <ul class="contacts">
+      @for (c of contacts(); track $index) {
+        <li>
+          <a [href]="c.href" target="_blank" rel="noopener noreferrer">{{ c.meta }}</a>
+        </li>
+      }
+    </ul>
+    <button type="button" class="print" (click)="print()">{{ ui().print }}</button>
+  </header>
+
+  @for (s of sections(); track s.id) {
+    @if (s.id !== 'contacto') {
+      <section class="block">
+        <h2>{{ s.title }}</h2>
+
+        @for (p of s.paragraphs ?? []; track $index) {
+          <p>{{ p }}</p>
+        }
+
+        @if (s.chips; as chips) {
+          <ul class="chips">
+            @for (chip of chips; track $index) {
+              <li>{{ chip }}</li>
+            }
+          </ul>
+        }
+
+        @if (s.items; as items) {
+          <ul class="items">
+            @for (item of items; track $index) {
+              <li>
+                <div class="item-head">
+                  @if (item.href) {
+                    <a [href]="item.href" target="_blank" rel="noopener noreferrer">{{ item.title }}</a>
+                  } @else {
+                    <strong>{{ item.title }}</strong>
+                  }
+                  @if (item.tag) {
+                    <span class="tag">{{ item.tag }}</span>
+                  }
+                </div>
+                @if (item.meta) {
+                  <p class="meta">{{ item.meta }}</p>
+                }
+                @if (item.bullets) {
+                  <ul class="bullets">
+                    @for (b of item.bullets; track $index) {
+                      <li>{{ b }}</li>
+                    }
+                  </ul>
+                }
+              </li>
+            }
+          </ul>
+        }
+      </section>
+    }
+  }
+</article>
